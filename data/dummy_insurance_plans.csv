@@ -1,10 +1,10 @@
 PlanID,Provider,PlanType,PlanName,MonthlyPremium,Deductible,OOP_Max,NetworkSize,FlexibilityScore,SpecialistAccess,ReferralNeeded,GoodForConditions,Notes
-INS001,Anthem,HMO,Basic HMO,300,1500,6000,Large,3,Direct Access,Yes,"General wellness, chronic conditions (in-network)",Good for predictable care.
-INS002,Anthem,PPO,Preferred Choice PPO,450,1000,5000,Very Large,8,Direct Access,No,"Frequent specialist visits, travel",Higher premiums for flexibility.
-INS003,MetLife,HMO,MetLife Standard HMO,320,1700,6500,Medium,3,Direct Access,Yes,"General wellness, local care",Budget-friendly, but limited network.
-INS004,MetLife,PPO,MetLife Flex PPO,480,800,4500,Large,9,Direct Access,No,"Any specialist, broad geographic needs",Premium option for maximum choice.
-INS005,Aetna,EPO,Aetna Local EPO,380,2000,7000,Large,5,Direct Access,No,"Local network, no referrals",No out-of-network coverage.
-INS006,Aetna,POS,Aetna Hybrid POS,400,1800,6800,Medium,6,Direct Access,Yes,"Balanced choice, some out-of-network possible",Referrals for in-network specialist.
-INS007,UnitedHealthcare,PPO,UHC Premium PPO,500,500,4000,Very Large,10,Direct Access,No,"Extensive needs, wants best coverage",Highest premium for best coverage.
-INS008,UnitedHealthcare,HMO,UHC Value HMO,280,2000,7000,Large,2,Direct Access,Yes,"Budget-conscious, stable health",Very affordable, strict network.
-INS009,Cigna,EPO,Cigna Core EPO,370,2200,7200,Medium,4,Direct Access,No,"Local network, no referrals",Similar to other EPOs.
+INS001,Anthem,HMO,Basic HMO,300,1500,6000,Large,3,Direct Access,Yes,"General wellness; chronic conditions (in-network)",Good for predictable care.
+INS002,Anthem,PPO,Preferred Choice PPO,450,1000,5000,Very Large,8,Direct Access,No,"Frequent specialist visits; travel",Higher premiums for flexibility.
+INS003,MetLife,HMO,MetLife Standard HMO,320,1700,6500,Medium,3,Direct Access,Yes,"General wellness; local care",Budget-friendly; but limited network.
+INS004,MetLife,PPO,MetLife Flex PPO,480,800,4500,Large,9,Direct Access,No,"Any specialist; broad geographic needs",Premium option for maximum choice.
+INS005,Aetna,EPO,Aetna Local EPO,380,2000,7000,Large,5,Direct Access,No,"Local network; no referrals",No out-of-network coverage.
+INS006,Aetna,POS,Aetna Hybrid POS,400,1800,6800,Medium,6,Direct Access,Yes,"Balanced choice; some out-of-network possible",Referrals for in-network specialist.
+INS007,UnitedHealthcare,PPO,UHC Premium PPO,500,500,4000,Very Large,10,Direct Access,No,"Extensive needs; wants best coverage",Highest premium for best coverage.
+INS008,UnitedHealthcare,HMO,UHC Value HMO,280,2000,7000,Large,2,Direct Access,Yes,"Budget-conscious; stable health",Very affordable; strict network.
+INS009,Cigna,EPO,Cigna Core EPO,370,2200,7200,Medium,4,Direct Access,No,"Local network; no referrals",Similar to other EPOs.
