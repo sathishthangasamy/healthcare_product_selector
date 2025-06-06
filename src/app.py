@@ -1,133 +1,119 @@
 import streamlit as st
 import pandas as pd
+from src.utils import load_plan_type_definitions, load_dummy_insurance_plans, get_plan_type_details, filter_and_rank_plans
 
-# --- Dummy Data (This would come from a secure, HIPAA-compliant database in a real app) ---
-products_data = {
-    "product_id": ["P001", "P002", "P003", "P004", "P005", "P006", "P007", "P008"],
-    "name": [
-        "Pain Relief (Generic Ibuprofen)", "Allergy Relief (Loratadine)",
-        "Blood Pressure Monitor", "Glucose Meter Kit",
-        "Vitamin D Supplement", "Multivitamin (Adult)",
-        "Antacid Tablets", "First Aid Kit (Basic)"
-    ],
-    "category": [
-        "OTC Medication", "OTC Medication", "Medical Device", "Medical Device",
-        "Supplement", "Supplement", "OTC Medication", "General Health"
-    ],
-    "suitable_for_conditions": [
-        "Pain, Fever, Inflammation", "Allergies, Hay Fever",
-        "High Blood Pressure", "Diabetes",
-        "Vitamin D Deficiency", "General Wellness",
-        "Heartburn, Indigestion", "Minor Cuts, Scrapes"
-    ],
-    "general_price_range": [
-        "$5 - $15", "$10 - $25", "$30 - $60", "$40 - $80",
-        "$8 - $20", "$15 - $30", "$6 - $18", "$12 - $30"
-    ],
-    "description": [
-        "Common non-steroidal anti-inflammatory drug (NSAID) for pain and fever.",
-        "Non-drowsy antihistamine for 24-hour allergy symptom relief.",
-        "Digital monitor for home use to track blood pressure readings.",
-        "Kit includes meter, test strips, lancets for blood glucose monitoring.",
-        "Essential vitamin for bone health and immune support.",
-        "Comprehensive blend of vitamins and minerals for daily nutritional needs.",
-        "Chewable tablets for fast relief from stomach acid.",
-        "Essential supplies for treating minor injuries at home."
-    ]
-}
-df_products = pd.DataFrame(products_data)
+# --- Page Configuration ---
+st.set_page_config(layout="wide", page_title="Healthcare Plan Selector (Prototype)")
 
-# --- Streamlit App Layout ---
+# --- Load Dummy Data ---
+df_plan_types = load_plan_type_definitions()
+df_dummy_plans = load_dummy_insurance_plans()
 
-st.set_page_config(layout="wide", page_title="Healthcare Product Selector (Prototype)")
-
-st.title("💡 Healthcare Product Selector (Prototype)")
+# --- Title and Disclaimers ---
+st.title("⚕️ Healthcare Plan & Provider Selector (Prototype)")
 st.markdown("""
-Welcome to the Healthcare Product Selector! This is a **prototype** to demonstrate how an app can help
-U.S. residents find suitable healthcare products based on their needs.
+Welcome to the Healthcare Plan & Provider Selector! This **prototype** aims to illustrate how you could choose
+between different health insurance plan types (HMO, PPO, POS, EPO) and compare hypothetical providers
+based on your needs.
 
-**Important Note:** This prototype uses **dummy data** and **does not handle any real Protected Health Information (PHI)**.
-For a production application involving real patient data, strict HIPAA compliance and secure infrastructure are mandatory.
-Always consult a healthcare professional for medical advice.
+**CRITICAL DISCLAIMER:**
+* **ALL DATA IS DUMMY AND HYPOTHETICAL.** This app does NOT use real insurance plan data, premiums, or provider networks.
+    Real plan details are proprietary, constantly change, and vary by location and personal factors.
+* **NOT HIPAA COMPLIANT.** This prototype is for demonstration only and does NOT handle any Protected Health Information (PHI).
+    A production application would require a robust, secure, and HIPAA-compliant backend infrastructure.
+* **NOT FINANCIAL OR MEDICAL ADVICE.** Always consult with a licensed insurance agent or financial advisor for insurance decisions, and a healthcare professional for medical advice.
 """)
 
-st.subheader("Tell us about your needs (Dummy Input)")
+st.subheader("1. Understand Plan Types")
 
-# User inputs (simplified for prototype)
-col1, col2, col3 = st.columns(3)
+selected_plan_type_overview = st.selectbox(
+    "Select a Plan Type to learn more:",
+    [""] + list(df_plan_types['PlanType'].unique())
+)
+
+if selected_plan_type_overview:
+    details = get_plan_type_details(df_plan_types, selected_plan_type_overview)
+    if details is not None:
+        st.markdown(f"**{details['PlanType']}**: {details['ShortDescription']}")
+        st.markdown(f"- **Key Features:** {details['KeyFeatures']}")
+        st.markdown(f"- **Considerations:** {details['Considerations']}")
+        st.markdown("---")
+
+st.subheader("2. Tell us about your priorities (Hypothetical)")
+
+col1, col2 = st.columns(2)
 
 with col1:
-    user_symptom = st.text_input("What symptoms are you experiencing (e.g., 'pain', 'allergies')?")
-    user_age_group = st.selectbox("Your Age Group", ["", "Child", "Adult", "Senior"])
+    user_preferred_plan_type = st.selectbox(
+        "Which plan type are you considering?",
+        ["Any"] + list(df_plan_types['PlanType'].unique()),
+        help="Choose a specific type or 'Any' for broad suggestions."
+    )
+    user_conditions_input = st.text_input(
+        "Do you have any specific health conditions? (e.g., 'diabetes', 'allergies')",
+        help="This helps us hypothetically filter suitable plans. (Dummy data only)."
+    )
 
 with col2:
-    user_condition = st.text_input("Do you have a specific health condition (e.g., 'diabetes', 'high blood pressure')?")
-    product_category = st.selectbox("Preferred Product Category", ["", "All", "OTC Medication", "Medical Device", "Supplement", "General Health"])
+    user_priorities = st.multiselect(
+        "What are your top priorities?",
+        [
+            "Low Monthly Premium",
+            "Low Deductible",
+            "Max Flexibility (out-of-network options)",
+            "Easy Specialist Access (no referrals)",
+            "Broad Network of Doctors"
+        ],
+        help="Select factors important to you."
+    )
 
-with col3:
-    st.write("*(No PHI collected here)*")
-    # Placeholder for future "insurance info" input
-    # insurance_type = st.selectbox("Your Insurance Type (e.g., 'PPO', 'HMO')", ["N/A", "PPO", "HMO"])
+st.subheader("3. Hypothetical Plan Recommendations & Provider Comparison")
 
-st.markdown("---")
+if st.button("Find Hypothetical Plans"):
+    if not df_dummy_plans.empty:
+        recommended_plans = filter_and_rank_plans(
+            df_dummy_plans,
+            user_preferred_plan_type,
+            user_priorities,
+            user_conditions_input
+        )
 
-# --- Product Recommendation Logic (Simplified) ---
+        if not recommended_plans.empty:
+            st.write(f"Based on your inputs, here are some **hypothetical** plans that might fit:")
 
-st.subheader("Suggested Products")
+            # Display top 5 hypothetical plans
+            for index, row in recommended_plans.head(5).iterrows():
+                with st.expander(f"**{row['PlanName']}** by {row['Provider']} ({row['PlanType']})"):
+                    st.markdown(f"**Monthly Premium:** ${row['MonthlyPremium']}")
+                    st.markdown(f"**Deductible:** ${row['Deductible']}")
+                    st.markdown(f"**Out-of-Pocket Max:** ${row['OOP_Max']}")
+                    st.markdown(f"**Network Size:** {row['NetworkSize']}")
+                    st.markdown(f"**Flexibility (1-10):** {row['FlexibilityScore']}")
+                    st.markdown(f"**Specialist Access:** {row['SpecialistAccess']}")
+                    st.markdown(f"**Referral Needed:** {'Yes' if row['ReferralNeeded'] else 'No'}")
+                    st.markdown(f"**Good For:** {row['GoodForConditions']}")
+                    st.markdown(f"**Notes:** {row['Notes']}")
+                    st.caption("*(Remember, these are dummy figures. Actual plans vary significantly.)*")
+                    st.write("---")
 
-# Filter products based on user input
-filtered_products = df_products.copy()
+            st.markdown("### Hypothetical Providers Offering Plans")
+            # Show a list of providers from the filtered plans
+            st.write("Hypothetical providers with plans matching your criteria:")
+            st.write(recommended_plans['Provider'].unique())
+            st.info("*(In a real app, you'd click a provider to see their real plans or be directed to their site.)*")
 
-if user_symptom:
-    filtered_products = filtered_products[
-        filtered_products["suitable_for_conditions"].str.contains(user_symptom, case=False, na=False) |
-        filtered_products["description"].str.contains(user_symptom, case=False, na=False)
-    ]
-
-if user_condition:
-    filtered_products = filtered_products[
-        filtered_products["suitable_for_conditions"].str.contains(user_condition, case=False, na=False)
-    ]
-
-if product_category and product_category != "All":
-    filtered_products = filtered_products[
-        filtered_products["category"] == product_category
-    ]
-
-if user_age_group:
-    # Very basic age group filtering, would be much more complex in reality
-    if user_age_group == "Child":
-        # For simplicity, assume certain products are not for children in this dummy data
-        filtered_products = filtered_products[
-            ~filtered_products["name"].str.contains("Blood Pressure Monitor|Glucose Meter Kit|Multivitamin (Adult)", case=False, na=False)
-        ]
-    elif user_age_group == "Adult":
-        # No specific exclusions for adult in this simple case
-        pass
-    elif user_age_group == "Senior":
-        # Might prioritize certain types of products for seniors
-        pass
-
-
-if not filtered_products.empty:
-    st.write(f"Based on your inputs, here are some products that might be suitable:")
-    for index, row in filtered_products.iterrows():
-        with st.expander(f"**{row['name']}** ({row['category']})"):
-            st.markdown(f"**Description:** {row['description']}")
-            st.markdown(f"**Suitable for:** {row['suitable_for_conditions']}")
-            st.markdown(f"**General Price Range:** {row['general_price_range']}")
-            st.info("*(Note: Actual prices and insurance coverage vary greatly. Consult your insurance provider and pharmacy.)*")
-            st.write("---")
-else:
-    st.warning("No products found matching your criteria. Try adjusting your inputs.")
+        else:
+            st.warning("No hypothetical plans found matching your criteria. Try adjusting your inputs.")
+    else:
+        st.error("Dummy insurance plan data not loaded. Check 'data/dummy_insurance_plans.csv'.")
 
 st.markdown("---")
-st.markdown("### Educational Resources")
-st.write("""
-- **Understanding your Insurance Plan:** Learn about deductibles, co-pays, and formularies.
-- **Generic vs. Brand-Name Drugs:** What's the difference and why does it matter?
-- **Safe Medication Disposal:** How to properly dispose of unused or expired medications.
+st.markdown("### Next Steps (For a Real Application):")
+st.markdown("""
+* **Actual Data Integration:** Securely connect to real insurance plan databases and APIs (a major, complex undertaking).
+* **Advanced Matching:** Implement sophisticated algorithms for precise plan matching based on detailed user profiles and robust plan data.
+* **HIPAA Compliance:** Design and deploy on a HIPAA-compliant infrastructure with strict data security measures.
+* **Licensing:** Ensure all necessary insurance licensing is in place for providing real advice.
 """)
 
-st.markdown("---")
-st.caption("This application is for informational purposes only and does not constitute medical advice. Consult with a qualified healthcare professional for any health concerns or before making any decisions related to your health or treatment.")
+st.caption("This application is for informational purposes only and does not constitute financial, insurance, or medical advice. Consult with licensed professionals.")

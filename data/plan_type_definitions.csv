@@ -1,0 +1,5 @@
+PlanType,ShortDescription,KeyFeatures,Considerations
+HMO,"Health Maintenance Organization","Lower premiums, specific network of doctors and hospitals, referrals usually needed for specialists.",Less flexibility, must stay in network for coverage (except emergencies).
+PPO,"Preferred Provider Organization","Higher premiums than HMO, more flexibility, no referrals needed for specialists, can go out-of-network (but pay more).",Higher out-of-pocket costs for out-of-network care, higher premiums.
+POS,"Point of Service","Hybrid of HMO and PPO, typically requires a referral to see a specialist, but allows out-of-network care with higher costs.",Requires referrals like an HMO, but adds out-of-network option like PPO.
+EPO,"Exclusive Provider Organization","Similar to PPO but usually no out-of-network coverage (except emergencies), no referrals needed for specialists.",No coverage outside network (except emergencies), may have lower premiums than PPO.
