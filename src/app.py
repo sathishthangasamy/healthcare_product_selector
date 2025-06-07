@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from src.utils import load_plan_type_definitions, load_dummy_insurance_plans, get_plan_type_details, filter_and_rank_plans
+from utils import load_plan_type_definitions, load_dummy_insurance_plans, get_plan_type_details, filter_and_rank_plans
 
 # --- Page Configuration ---
 st.set_page_config(layout="wide", page_title="Healthcare Plan Selector (Prototype)")
